@@ -5,3 +5,5 @@ def Login(request):
 
 def Home(request):
     return render(request, 'home.html')
+def process(request):
+    return render(request, 'process.html')

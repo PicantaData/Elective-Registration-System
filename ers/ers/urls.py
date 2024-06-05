@@ -22,7 +22,7 @@ from student import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.Home, name='Home'),
-
+    path('process/', views.process, name='process'),
     path('login/',views.Login,name='Login'),
     path('logout/',auth_views.LogoutView.as_view(),name='Logout'),
     path('social-auth/', include('social_django.urls', namespace='social')),
