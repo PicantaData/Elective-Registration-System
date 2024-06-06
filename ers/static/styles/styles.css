@@ -35,3 +35,22 @@ select {
         padding: 6px;
     }
 } */
+
+    .bg-rec{
+      width: 1496px;
+      height: 742px;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, #84eaea 72.44%, #fdfdfd 100%);
+    }
+    .bg-blur {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 300px; /* Adjust size as needed */
+        height: 300px;
+        border-radius: 1062px;
+        background: #57d4e5;
+        filter: blur(150.64999389648438px);
+        z-index: -1; /* Ensure it stays behind other content */
+    }
+

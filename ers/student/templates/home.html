@@ -1,42 +1,35 @@
 {% extends 'navbar.html' %}
-<!-- <link rel="stylesheet" type="text/css" href="..\styles.css"> -->
+{% load static %}
 
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static '\styles\styles.css' %}">
 <br></br>
 <br></br>
-
 <div class="container-lg rounded">
-  
     <div class="row mx-2">
-      <!-- <div class="bg-rec"></div> -->
-        <h3 class="text-center mb-4">Elective Registration System DA-IICT</h3>
-        <p>The Elective Registration System is designed to facilitate the selection and allotment of elective courses for students at DA-IICT. The system aims to streamline the process by allowing students to submit their course preferences and ensuring fair and efficient allotment based on predefined criteria.</p>
+        <div class="col-md-8">
+            <h3 class="text-center mb-4" style="font-size: 2rem; padding-right: 18.5rem;">Elective Registration System DA-IICT</h3>
+            <p style="font-size: 1.25rem; padding-right: 1rem;">The Elective Registration System is designed to facilitate the selection and allotment of elective courses for students at DA-IICT. The system aims to streamline the process by allowing students to submit their course preferences and ensuring fair and efficient allotment based on predefined criteria.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="{% static 'images/vector.svg' %}" alt="Vector Image" class="img-fluid">
+        </div>
     </div>
 </div>
+
+<div class="container-lg mt-5">
+    <div class="row mx-2">
+        <h4 style="font-size: 1.5rem;">How to Use This Website</h4>
+        <ol style="font-size: 1.25rem;">
+            <li>First, you need to <a href="{% url 'social:begin' 'google-oauth2' %}">login</a> using your DA-IICT credentials.</li>
+            <li>Once logged in, fill out the form displayed on the homepage with your details.</li>
+            <li>Navigate to the 'Register' option.</li>
+            <li>Under 'Register', go to each slot and provide your preferences. It is mandatory to give a preference for 'Preference 1', whether it is 'None' or the name of a course.</li>
+            <li>After filling out your preferences for each slot, click on the 'Submit Preferences' button to save your choices.</li>
+        </ol>
+    </div>
+</div>
+
 <div class="bg-blur"></div>
-<!-- {% block styles %} -->
-
-<style>
-    .bg-rec{
-      width: 1496px;
-      height: 742px;
-      flex-shrink: 0;
-      background: linear-gradient(180deg, #84eaea 72.44%, #fdfdfd 100%);
-    }
-    .bg-blur {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 300px; /* Adjust size as needed */
-        height: 300px;
-        border-radius: 1062px;
-        background: #57d4e5;
-        filter: blur(150.64999389648438px);
-        z-index: -1; /* Ensure it stays behind other content */
-    }
-</style>
-
-<!-- {% endblock %} -->
-<!-- <script src="script.js"></script> -->
 
 {% endblock %}
