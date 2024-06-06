@@ -48,7 +48,7 @@
                 </li>
                 {% else %}
                 <li class="nav-item">
-                  <a class="nav-link" style="color:blueviolet;" href="{% url 'social:begin' 'google-oauth2' %}">Login</a>
+                  <a class="nav-link" style="color:blueviolet;" href="{% url 'social:begin' 'google-oauth2' %}?next={% url 'FirstLogin' %}">Login</a>
                 </li>
                 {% endif %}
                 </ul>
