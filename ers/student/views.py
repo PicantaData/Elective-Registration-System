@@ -12,7 +12,7 @@ def Home(request):
             return redirect('FirstLogin')
         
     return render(request, 'home.html')
-
+  
 def FirstLogin(request):
     if request.user.is_authenticated:
         if StudentUser.objects.filter(user=request.user):
