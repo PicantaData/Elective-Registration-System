@@ -1,0 +1,45 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block content %}
+<br></br>
+<br></br>
+<div class="container-lg align-items-center">
+    <form method="POST" action="{% url 'PreferenceProcess' %}">
+        {% csrf_token %}
+        {% for slot, courses in courses_dict.items %}
+            <h4>Slot {{ slot }}</h4>
+            <hr>
+            <!-- Add a constraint such that either all or none preferences are selected -->
+            {% for pref in courses.1 %}
+                <h5>Preference {{ pref }}</h5>
+                <div class="form-group">
+                    <select class="form-control" id="slot{{ slot }}preference{{ pref }}" onchange="checkDuplicate(this)" name="slot{{ slot }}preference{{ pref }}">
+                        <option selected disabled value="">Choose Option</option>
+                        {% for openForInstance in courses.0 %}
+                            <option value="{{ openForInstance.pk }}">{{ openForInstance }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <br>
+                {% endfor %}
+        {% endfor %}
+        <br>
+        <button type="submit" class="btn btn-primary">Submit Preferences</button>
+    </form>
+</div>
+
+<script>
+    function checkDuplicate(selectElement) {
+        const selectedValue = selectElement.value;
+        const allSelectElements = document.querySelectorAll('select');
+        for (let i = 0; i < allSelectElements.length; i++) {
+            if (allSelectElements[i] !== selectElement && allSelectElements[i].value === selectedValue) {
+                alert('Same course cannot be chosen in two options');
+                selectElement.value = '';
+                break;
+            }
+        }
+    }
+</script>
+{% endblock %}
