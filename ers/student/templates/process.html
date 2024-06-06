@@ -4,49 +4,46 @@
 <br></br>
 <br></br>
 <div class="container px-1 text-left">
-    <div class="mx-2">
-        <h4 class="mb-4">Please fill the given below details.</h4>
-        <div class="mb-3">
-            <label for="studentID" class="form-label"><h4>Student ID</h4></label>
-            <input type="text" class="form-control" id="studentID" placeholder="Enter Student ID">
-        </div>
-        <div class="mb-3">
-            <label class="form-label"><h4>Program</h4></label>
-            <div class="row">
-                <div class="col">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="program" id="btech" value="btech">
-                        <label class="form-check-label" for="btech">
-                            B.Tech
-                        </label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="program" id="mtech" value="mtech">
-                        <label class="form-check-label" for="mtech">
-                            M.Tech
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="mb-3">
-            <label for="year" class="form-label"><h4>Year of Study</h4></label>
-            <select class="form-select" id="year">
-                <option selected>Choose...</option>
-                <option>First Year</option>
-                <option>Second Year</option>
-                <option>Third Year</option>
-                <option>Fourth Year</option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="batch" class="form-label"><h4>Batch</h4></label>
-            <input type="text" class="form-control" id="batch" placeholder="Enter Batch">
-        </div>
-        <h4 class="mb-4">Provide your preferences below</h4>
-    </div>
+  <div class="mx-2">
+      <h4 class="mb-4">Please fill the given below details.</h4>
+      <div class="mb-3">
+          <label for="studentID" class="form-label"><h4>Name</h4></label>
+          <input type="text" class="form-control" id="studentID" placeholder="Enter Your Name" >
+      </div>
+      <div class="mb-3">
+          <label for="studentID" class="form-label"><h4>Student ID</h4></label>
+          <input type="number" class="form-control" id="studentID" placeholder="Enter Student ID" >
+      </div>
+      <div class="mb-3">
+          <label for="year" class="form-label"><h4>Program</h4></label>
+          <select class="form-select" id="year">
+              <option selected>Choose...</option>
+              <option>B.Tech ICT</option>
+              <option>B.Tech MnC</option>
+              <option>B.Tech CS</option>
+              <option>Masters</option>
+          </select>
+      </div>
+      <div class="mb-3">
+        <label for="year" class="form-label"><h4>Batch</h4></label>
+        <select class="form-select" id="year">
+            <option selected>Choose...</option>
+            <option>2021</option>
+            <option>2022</option>
+            <option>2023</option>
+        </select>
+      </div>
+      
+  </div>
+</div>
+<div class="container px-1 text-center">
+  <button type="submit" class="btn btn-primary">Submit</button>
+</div>
+
+
+<!------------------------------------------------------------------------------------------------------>
+<div class="container px-1 text-left">
+  <h4 class="mb-4">Provide your preferences below.</h4>
 </div>
 
 
@@ -227,47 +224,5 @@
 <div class="text-center mt-4">
     <button type="submit" class="btn btn-primary">Submit Preferences</button>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-<script>
-    document.getElementById("preferencesForm").addEventListener("submit", function(event) {
-        event.preventDefault(); // Prevent default form submission
-        validatePreferences(); // Call function to validate preferences
-    });
-
-    function validatePreferences() {
-        // Validation for Student ID
-        var studentID = document.getElementById("studentID").value;
-        if (!(/^\d{9}$/.test(studentID))) {
-            alert("Student ID must be numeric and should be exactly 9 digits.");
-            return;
-        }
-
-        // Validation for Program
-        var program = document.querySelector('input[name="program"]:checked');
-        if (!program) {
-            alert("Please select a program.");
-            return;
-        }
-
-        // Validation for Year of Study
-        var yearSelect = document.getElementById("year");
-        if (yearSelect.value === "Choose...") {
-            alert("Please select the year of study.");
-            return;
-        }
-
-        // Validation for Batch
-        var batch = document.getElementById("batch").value;
-        if (!(/^\d{1,4}$/.test(batch)) || batch > 2025) {
-            alert("Batch must be numeric and should not exceed 2025.");
-            return;
-        }
-
-        // If all validations pass, you can proceed with form submission or further processing
-        alert("Preferences submitted successfully!");
-        // Uncomment the line below to submit the form
-        // document.getElementById("preferencesForm").submit();
-    }
-</script>
+<script src="{% static/script.js}"></script>
 {% endblock %}
