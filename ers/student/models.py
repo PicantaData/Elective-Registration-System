@@ -39,7 +39,7 @@ class StudentForm(forms.ModelForm):
 class Course(models.Model):
     course_id = models.CharField(max_length=5,unique=True)
     course_name = models.CharField(max_length=100)
-    credits = models.IntegerField()
+    credits = models.DecimalField(decimal_places=1, max_digits=2)
     slot = models.IntegerField()
 
     def __str__(self):
