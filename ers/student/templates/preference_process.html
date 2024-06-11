@@ -2,30 +2,53 @@
 {% load static %}
 
 {% block content %}
-<br></br>
-<br></br>
+<br><br>
+<br><br>
 <div class="container-lg align-items-center">
     <form method="POST" action="{% url 'PreferenceProcess' %}">
         {% csrf_token %}
-        {% for slot, courses in courses_dict.items %}
-            <h4>Slot {{ slot }}</h4>
-            <hr>
-            <!-- Add a constraint such that either all or none preferences are selected -->
-            {% for pref in courses.1 %}
-                <h5>Preference {{ pref }}</h5>
-                <div class="form-group">
-                    <select class="form-control" id="slot{{ slot }}preference{{ pref }}" onchange="checkDuplicate(this)" name="slot{{ slot }}preference{{ pref }}">
-                        <option selected disabled value="">Choose Option</option>
-                        {% for openForInstance in courses.0 %}
-                            <option value="{{ openForInstance.pk }}">{{ openForInstance }}</option>
-                        {% endfor %}
-                    </select>
+        <div class="accordion" id="accordionExample">
+            {% for slot, courses in courses_dict.items %}
+                <div class="accordion-item">
+                    <!-- <div  id="heading{{ slot }}"> -->
+                        <h2 class="accordion-header">
+                            {% if forloop.first %}
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ slot }}" aria-expanded="true" aria-controls="collapse{{ slot }}">
+                                Slot {{ slot }}
+                            </button>
+                            {% else %}
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ slot }}" aria-expanded="false" aria-controls="collapse{{ slot }}">
+                                Slot {{ slot }}
+                            </button>
+                            {% endif %}
+                        </h2>
+                    <!-- </div> -->
+                    {% if forloop.first %}  
+                    <div id="collapse{{ slot }}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    {% else %}
+                    <div id="collapse{{ slot }}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    {% endif %}
+                        <div class="accordion-body">
+                            {% for pref in courses.1 %}
+                                <h5>Preference {{ pref }}</h5>
+                                <div class="form-group">
+                                    <select class="form-control" id="slot{{ slot }}preference{{ pref }}" onchange="checkDuplicate(this)" name="slot{{ slot }}preference{{ pref }}">
+                                        <option selected disabled value="">Choose Option</option>
+                                        {% for openForInstance in courses.0 %}
+                                            <option value="{{ openForInstance.pk }}">{{ openForInstance }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <br>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
-                <br>
-                {% endfor %}
-        {% endfor %}
+            {% endfor %}
+        </div>
         <br>
-        <button type="submit" class="btn btn-primary">Submit Preferences</button>
+        <button type="submit" class="btn btn-primary mx-auto d-block">Submit Preferences</button>
+
     </form>
 </div>
 
