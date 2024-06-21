@@ -16,9 +16,9 @@ class StudentUser(models.Model):
         ('2023', 'Second Year'),
         ('2024', 'First Year'),
     ]
-    user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
+    student_id = models.IntegerField(primary_key=True)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=100)
-    student_id = models.IntegerField(unique=True)
     program = models.CharField(max_length=15, choices=PROGRAM)
     batch = models.CharField(max_length=15, choices=BATCH)
 

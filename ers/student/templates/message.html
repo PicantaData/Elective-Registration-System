@@ -30,7 +30,7 @@
                 <div class="modal-footer">
                     <a href="{% url 'Home' %}" class="btn btn-warning">Return to Home</a>
                     {% if toLogin %}
-                    <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-primary">{{ toLogin }}</a>
+                    <a href="{% url 'Login' %}" class="btn btn-primary">{{ toLogin }}</a>
                     {% endif %}
                 </div>
             </div>

@@ -2,30 +2,58 @@
 {% load static %}
 
 {% block content %}
-<br></br>
-<br></br>
+<br><br>
+<br><br>
 <div class="container-lg align-items-center">
-    <form method="POST" action="{% url 'PreferenceProcess' %}">
+    <form method="POST" action="{% url 'PreferenceProcess' %}" onsubmit="return validateForm()">
         {% csrf_token %}
-        {% for slot, courses in courses_dict.items %}
-            <h4>Slot {{ slot }}</h4>
-            <hr>
-            <!-- Add a constraint such that either all or none preferences are selected -->
-            {% for pref in courses.1 %}
-                <h5>Preference {{ pref }}</h5>
-                <div class="form-group">
-                    <select class="form-control" id="slot{{ slot }}preference{{ pref }}" onchange="checkDuplicate(this)" name="slot{{ slot }}preference{{ pref }}">
-                        <option selected disabled value="">Choose Option</option>
-                        {% for openForInstance in courses.0 %}
-                            <option value="{{ openForInstance.pk }}">{{ openForInstance }}</option>
-                        {% endfor %}
-                    </select>
+        <div class="accordion" id="accordionExample">
+            {% for slot, courses in courses_dict.items %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        {% if forloop.first %}
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ slot }}" aria-expanded="true" aria-controls="collapse{{ slot }}">
+                            Slot {{ slot }}
+                        </button>
+                        {% else %}
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ slot }}" aria-expanded="false" aria-controls="collapse{{ slot }}">
+                            Slot {{ slot }}
+                        </button>
+                        {% endif %}
+                    </h2>
+                    {% if forloop.first %}  
+                    <div id="collapse{{ slot }}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    {% else %}
+                    <div id="collapse{{ slot }}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    {% endif %}
+                        <div class="accordion-body">
+                            {% for pref in courses.1 %}
+                                <h5>Preference {{ pref }}</h5>
+                                <div class="form-group">
+                                    <select class="form-control" id="slot{{ slot }}preference{{ pref }}" onchange="checkDuplicate(this); validateNoneSelection('{{ slot }}')" name="slot{{ slot }}preference{{ pref }}">
+                                        <option selected disabled value="">Choose Option</option>
+                                        {% for openForInstance in courses.0 %}
+                                            <option value="{{ openForInstance.pk }}">{{ openForInstance }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <br>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
-                <br>
-                {% endfor %}
-        {% endfor %}
+            {% endfor %}
+        </div>
         <br>
-        <button type="submit" class="btn btn-primary">Submit Preferences</button>
+        <hr class="mt-0 mb-3">
+        <div class="d-none d-md-block text-end">
+        <button type="reset" class="btn btn-danger" style="width: 90px">Reset</button>
+        <button type="submit" class="btn btn-success" style="width: 180px">Submit Preferences</button>
+        </div>
+        <div class="d-block d-md-none text-center pt-3">
+        <button type="submit" class="btn btn-success w-50 mb-2">Submit</button>
+        <button type="reset" class="btn btn-danger w-50 mb-2">Reset</button>
+        </div>
     </form>
 </div>
 
@@ -34,12 +62,56 @@
         const selectedValue = selectElement.value;
         const allSelectElements = document.querySelectorAll('select');
         for (let i = 0; i < allSelectElements.length; i++) {
-            if (allSelectElements[i] !== selectElement && allSelectElements[i].value === selectedValue) {
+            if (allSelectElements[i] !== selectElement && allSelectElements[i].value === selectedValue && selectedValue !== "") {
                 alert('Same course cannot be chosen in two options');
                 selectElement.value = '';
                 break;
             }
         }
+    }
+
+    function validateNoneSelection(slot) {
+        const firstPreference = document.querySelector(`select[name="slot${slot}preference1"]`);
+        const allPreferences = document.querySelectorAll(`select[name^="slot${slot}preference"]`);
+
+        if (firstPreference.value === "") {
+            allPreferences.forEach(select => {
+                if (select !== firstPreference) {
+                    select.value = ""; // Reset the value
+                    select.disabled = true; // Disable other preferences
+                }
+            });
+        } else {
+            allPreferences.forEach(select => {
+                if (select.disabled) {
+                    select.disabled = false; // Enable other preferences
+                }
+            });
+        }
+    }
+
+    function validateForm() {
+        const slots = document.querySelectorAll('.accordion-item');
+        for (let i = 0; i < slots.length; i++) {
+            const firstPreference = slots[i].querySelector('select[name^="slot"][name$="preference1"]');
+            if (!firstPreference) {
+                alert('The first preference for each slot must be selected.');
+                firstPreference.focus();
+                return false;
+            }
+
+            if (firstPreference.value !== "") {
+                const allPreferences = slots[i].querySelectorAll('select[name^="slot"]');
+                for (let j = 1; j < allPreferences.length; j++) {
+                    if (allPreferences[j].value === "") {
+                        alert('All preferences must be selected if the first preference is not "Choose Option".');
+                        allPreferences[j].focus();
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 </script>
 {% endblock %}

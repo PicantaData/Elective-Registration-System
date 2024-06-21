@@ -22,10 +22,10 @@ from student import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.Home, name='Home'),
-    path('process/', views.Process, name='Process'),
     path('preference-process/', views.PreferenceProcess, name='PreferenceProcess'),
     path('login/',views.Login,name='Login'),
     path('logout/',auth_views.LogoutView.as_view(),name='Logout'),
-    path('first-login/',views.FirstLogin,name='FirstLogin'),
     path('social-auth/', include('social_django.urls', namespace='social')),
+    path('admin-panel/',views.AdminControls,name='AdminControls'),
+    path('admin-panel/upload/studentData/',views.UploadStudentData, name='uStudentData'),
 ]

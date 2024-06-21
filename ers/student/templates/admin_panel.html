@@ -1,0 +1,30 @@
+{% extends 'navbar.html' %}
+{% block content %}
+<br>
+<br>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Admin Panel</h1>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <!-- <h5>Upload Student Data</h5> -->
+        <form action="{% url 'uStudentData' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="file">Upload Student Data</label>
+                    <input type="file" name="file" id="file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+            </form>
+    </div>
+</div>
+
+{% endblock %}

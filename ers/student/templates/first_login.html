@@ -9,68 +9,12 @@
             {% csrf_token %}
             {{ form.errors }}
               <div class="mb-3">
-                <label class="fw-semibold form-label">Name</label>
-                <input type="text" class="form-control" name="name" required>
-  
-              </div>
-              <div class="mb-3">
                 <label class="fw-semibold form-label">StudentID</label>
                 <input type="text" class="form-control" name="student_id" required>
-  
-              </div>
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="fw-semibold form-label">Program</label>
-                    <select class="form-select" name="program" required>
-                      <option selected disabled value="">Select Program</option>
-                      {% for obj, program in form.fields.program.choices %}
-                      {% if obj %}
-                      <option value="{{ obj }}">{{ program }}</option>
-                      {% endif %}
-                      {% endfor %}
-                    </select>
-                  </div>
-                <div class="col-md-6 mb-3">
-                  <label class="fw-semibold form-label">Batch</label>
-                  <select class="form-select" name="batch" required>
-                    <option selected disabled value="">Select Batch</option>
-                    {% for obj, batch in form.fields.batch.choices %}
-                    {% if obj %}
-                    <option value="{{ obj }}">{{ batch }}</option>
-                    {% endif %}
-                    {% endfor %}
-                  </select>
-                </div>
-                <!-- <div class="col-md-6 mb-3">
-                  <label class="fw-semibold form-label" >CPI</label>
-                  <input type="number" class="form-control" min="0" max="10" step="0.01" name="cpi" required>
-                </div> -->
               </div>
               
+              
               <hr class="mt-0 mb-3">
-              <!-- <label class="fw-semibold form-label">Select Committee</label>
-              <div class="row row-gap-2 mb-3 px-2">
-                {% for obj, committee in form.fields.committee.choices %}
-                {% if obj and committee != "Hostel Management Committee" %}
-                <div class="col-md-6 px-1">
-                  <input required type="radio" class="btn-check" name="committee" id="{{committee|slugify}}" value="{{committee}}" autocomplete="off">
-                  <label class="fw-semibold btn btn-outline-primary btn-sm w-100" for="{{committee|slugify}}" >{{ committee }}</label>
-                </div>
-                {% endif %}
-                {% endfor %}
-              </div> -->
-              <!-- <div class="row mb-3">
-                  <div><b>Note:</b> Elections for HMC will be conducted separately, and dates will be announced by the EC. Canidates interested to nominate for HMC in no case should nominate for any other committee as it would violate the single nomination rule.</div>
-              </div>
-              <div class="row mb-4">
-                  <div class="col-auto">
-                      <input class="form-check-input" type="checkbox" value="TERMS" name="check" required>
-                  </div>
-                  <label class="col ps-0 form-check-label">
-                      I agree that  I am not under academic probation, have no active backlogs, and have not been placed under disciplinary probation.
-                  </label>
-              </div> -->
-  
               <div class="d-none d-md-block text-end">
                 <button type="reset" class="btn btn-danger" style="width: 90px">Reset</button>
                 <button type="submit" class="btn btn-success" style="width: 90px">Submit</button>
