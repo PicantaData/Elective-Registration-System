@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import StudentUser,StudentForm, OpenFor, Preferences
+from .models import StudentUser,StudentForm, OpenFor, Preferences, Course, OpenFor
+from django.contrib import messages
+from tablib import Dataset
+import pandas as pd
 
 def Login(request):
     if request.user.is_authenticated:
@@ -79,8 +82,141 @@ def AdminControls(request):
 
 def UploadStudentData(request):
     if request.method == 'POST':
-        csv_file = request.FILES['file']
-        # Save the instances to the database of Student User
-        print(csv_file)
+        # Check if file was uploaded
+        if 'file' not in request.FILES:
+            messages.error(request, 'No file was uploaded')
+            return redirect('AdminControls')
+        
+        file = request.FILES['file']
+
+        # Check if the file format is valid
+        if not file.name.endswith(('.csv', '.xlsx', '.xls')):
+            messages.error(request, 'This is not a valid file format. Only .csv, .xlsx, and .xls are allowed.')
+            return redirect('AdminControls')
+        
+        dataset = Dataset()
+        try:
+            if file.name.endswith('.csv'):
+                imported_data = dataset.load(file.read().decode('utf-8'), format='csv')
+            elif file.name.endswith('.xlsx'):
+                imported_data = dataset.load(file.read(), format='xlsx')
+            elif file.name.endswith('.xls'):
+                imported_data = dataset.load(file.read(), format='xls')
+            else:
+                messages.error(request, 'Unsupported file format')
+                return redirect('AdminControls')
+
+            # Iterate through rows and create/update StudentUser instances
+            for data in imported_data:
+                StudentUser.objects.update_or_create(
+                    student_id=data[0],
+                    defaults={
+                        'name': data[1],
+                        'program': data[2],
+                        'batch': data[3]
+                    }
+                )
+
+            messages.success(request, 'File uploaded and data saved successfully')
+        except Exception as e:
+            messages.error(request, f'Error processing file: {e}')
+            return redirect('AdminControls')
+
         return redirect('AdminControls')
+
+    return render(request, 'admin_panel.html')
+
+def UploadCourses(request):
+    if request.method == 'POST':
+        # Check if file was uploaded
+        if 'file' not in request.FILES:
+            messages.error(request, 'No file was uploaded')
+            return redirect('AdminControls')
+        
+        file = request.FILES['file']
+
+        # Check if the file format is valid
+        if not file.name.endswith(('.csv', '.xlsx', '.xls')):
+            messages.error(request, 'This is not a valid file format. Only .csv, .xlsx, and .xls are allowed.')
+            return redirect('AdminControls')
+        
+        dataset = Dataset()
+        try:
+            if file.name.endswith('.csv'):
+                imported_data = dataset.load(file.read().decode('utf-8'), format='csv')
+            elif file.name.endswith('.xlsx'):
+                imported_data = dataset.load(file.read(), format='xlsx')
+            elif file.name.endswith('.xls'):
+                imported_data = dataset.load(file.read(), format='xls')
+            else:
+                messages.error(request, 'Unsupported file format')
+                return redirect('AdminControls')
+
+            # Iterate through rows and create/update StudentUser instances
+            for data in imported_data:
+                Course.objects.update_or_create(
+                    course_id=data[0],
+                    defaults={
+                        'course_name': data[1],
+                        'credits': data[2],
+                        'slot': data[3]
+                    }
+                )
+
+            messages.success(request, 'File uploaded and data saved successfully')
+        except Exception as e:
+            messages.error(request, f'Error processing file: {e}')
+            return redirect('AdminControls')
+
+        return redirect('AdminControls')
+
+    return render(request, 'admin_panel.html')
+
+def UploadOpenFor(request):
+    if request.method == 'POST':
+        # Check if file was uploaded
+        if 'file' not in request.FILES:
+            messages.error(request, 'No file was uploaded')
+            return redirect('AdminControls')
+        
+        file = request.FILES['file']
+
+        # Check if the file format is valid
+        if not file.name.endswith(('.csv', '.xlsx', '.xls')):
+            messages.error(request, 'This is not a valid file format. Only .csv, .xlsx, and .xls are allowed.')
+            return redirect('AdminControls')
+        
+        dataset = Dataset()
+        try:
+            if file.name.endswith('.csv'):
+                imported_data = dataset.load(file.read().decode('utf-8'), format='csv')
+            elif file.name.endswith('.xlsx'):
+                imported_data = dataset.load(file.read(), format='xlsx')
+            elif file.name.endswith('.xls'):
+                imported_data = dataset.load(file.read(), format='xls')
+            else:
+                messages.error(request, 'Unsupported file format')
+                return redirect('AdminControls')
+
+            # Iterate through rows and create/update StudentUser instances
+            for data in imported_data:
+                OpenFor.objects.update_or_create(
+                    course=data[0],
+                    defaults={
+                        'program': data[1],
+                        'batch': data[2],
+                        'category': data[3],
+                        'seats': data[4],
+                    }
+                )
+
+            messages.success(request, 'File uploaded and data saved successfully')
+        except Exception as e:
+            messages.error(request, f'Error processing file: {e}')
+            return redirect('AdminControls')
+
+        return redirect('AdminControls')
+
+    return render(request, 'admin_panel.html')
+    
             

@@ -28,4 +28,6 @@ urlpatterns = [
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('admin-panel/',views.AdminControls,name='AdminControls'),
     path('admin-panel/upload/studentData/',views.UploadStudentData, name='uStudentData'),
+    path('admin-panel/upload/courseData/',views.UploadCourses, name='uCourses'),
+    path('admin-panel/upload/openforData/',views.UploadOpenFor, name='uOpen-for'),
 ]

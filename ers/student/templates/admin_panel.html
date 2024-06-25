@@ -10,8 +10,21 @@
             <hr>
         </div>
     </div>
+
+    <!-- Display messages -->
+    {% if messages %}
     <div class="row">
-        <!-- <h5>Upload Student Data</h5> -->
+        <div class="col-md-12">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <!--Import Student users-->
+    <div class="row">
         <form action="{% url 'uStudentData' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="col-md-4">
@@ -23,7 +36,41 @@
             <div class="col-md-4">
                 <button type="submit" class="btn btn-primary">Upload</button>
             </div>
-            </form>
+        </form>
+    </div>
+
+    <hr>
+    <!--Import Courses-->
+    <div class="row">
+        <form action="{% url 'uCourses' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="file">Upload Courses</label>
+                    <input type="file" name="file" id="file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+        </form>
+    </div>
+
+    <hr>
+    <!--Open-for-->
+    <div class="row">
+        <form action="{% url 'uOpen-for' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="file">Upload Open-for Data</label>
+                    <input type="file" name="file" id="file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+        </form>
     </div>
 </div>
 
