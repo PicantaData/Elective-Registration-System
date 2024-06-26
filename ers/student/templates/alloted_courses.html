@@ -1,0 +1,12 @@
+{% extends 'navbar.html' %}
+{% block content %}
+<br>
+<br>
+<br>
+<div class="container">
+    {% for allotment in alloted %}
+        <p>Slot {{allotment.slot}}: {{allotment.course.course.course_name}} ({{allotment.course.course.course_id}})</p>
+        <br>
+    {% endfor %}
+</div>
+{% endblock %}

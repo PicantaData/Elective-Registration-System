@@ -1,0 +1,16 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block content %}
+<br><br>
+<br><br>
+<div class="container-lg align-items-center">
+    <div class="accordion" id="accordionExample">
+        {% for preference in preferences %}
+            <p class="h3">Slot {{ preference.slot }}: Preference {{preference.preference_index}}: {{preference.course_preference.course.course_name}} ({{preference.course_preference.course.course_id}})</p>
+        {% endfor %}
+    </div>
+    <br>
+    </div>
+</div>
+{% endblock %}
