@@ -1,12 +1,37 @@
 {% extends 'navbar.html' %}
+{% load static %}
+
 {% block content %}
 <br>
 <br>
 <br>
 <div class="container">
-    {% for allotment in alloted %}
-        <p>Slot {{allotment.slot}}: {{allotment.course.course.course_name}} ({{allotment.course.course.course_id}})</p>
-        <br>
-    {% endfor %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Final Allotment</h1>
+            <hr>
+        </div>
+    </div>
+<div class="container-lg align-items-center">
+    {% if alloted %}
+        <div class="accordion" id="accordionAlloted">
+            {% for allotment in alloted %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ allotment.slot }}" aria-expanded="true" aria-controls="collapse{{ allotment.slot }}">
+                            Slot {{ allotment.slot }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ allotment.slot }}" class="accordion-collapse collapse show" data-bs-parent="#accordionAlloted">
+                        <div class="accordion-body">
+                            <p class="h5">{{ allotment.course.course.course_name }} ({{ allotment.course.course.course_id }})</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="h4">No allotments found for your account.</p>
+    {% endif %}
 </div>
 {% endblock %}
