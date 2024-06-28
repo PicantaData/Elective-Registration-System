@@ -36,7 +36,15 @@
                     <ul class="dropdown-menu">
                       <li><a class="dropdown-item mb-1" href="#">Electives Offered</a></li>
                       <li><hr class="dropdown-divider"></li>
+                      
+                      {% if student_status == 'FilledPreferences' %}
+                      <li><a class="dropdown-item mb-1" href="{% url 'PreferenceProcess' %}">View Filled Preferences</a></li>
+                      {% elif student_status == 'Alloted' %}
+                      <li><a class="dropdown-item mb-1" href="{% url 'PreferenceProcess' %}">View Allotment</a></li>
+                      {% else %}
                       <li><a class="dropdown-item mb-1" href="{% url 'PreferenceProcess' %}">Register</a></li>
+                      {% endif %}
+
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item mb-1" href="#">Available Course Policies</a></li>
                     </ul>

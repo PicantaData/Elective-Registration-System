@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import StudentUser,StudentForm, OpenFor, Preferences, Course, OpenFor, FormatForm, Allotment
+from .models import StudentUser,StudentForm, OpenFor, Preferences, Allotment
 from django.contrib import messages
 from tablib import Dataset
 import pandas as pd
@@ -9,6 +9,15 @@ from django.http import HttpResponse
 import logging
 
 logger = logging.getLogger(__name__)
+
+def find_status(request):
+    student_status = 'Fresh'
+    if Preferences.objects.filter(student=StudentUser.objects.get(student_id=request.user.email[:9])):
+        student_status = 'FilledPreferences'
+    elif Allotment.objects.filter(student=StudentUser.objects.get(student_id=request.user.email[:9])):
+        student_status = 'Alloted'
+    return student_status
+
 
 def Login(request):
     if request.user.is_authenticated:
@@ -31,7 +40,9 @@ def Home(request):
     if request.user.is_authenticated:
         try:
             if str(request.user.email[:9])==str(request.session['student_id']):
-                return render(request, 'home.html')
+
+                student_status = find_status(request)
+                return render(request, 'home.html', {'student_status': student_status})
             else:
                 return redirect('Login')
         except Exception as e:
@@ -50,9 +61,18 @@ def PreferenceProcess(request):
     except:
         print("Error getting student object")
 
-    if Preferences.objects.filter(student=student):
-        return redirect('Home')
+    student_status = find_status(request)
+
+    alloted_courses = Allotment.objects.filter(student=student).order_by('slot')
+    if alloted_courses:
+        return render(request, 'alloted_courses.html', {'alloted': alloted_courses, 'student_status': student_status})
+
+    # If edit preference feature is to be added, then move this to a separate function, and on edit, call this function so the form can be filled again and delete all previous preferences before storing new ones.
+    preferences = Preferences.objects.filter(student=student).order_by('slot', 'preference_index')
+    if preferences:
+        return render(request, 'view_preferences.html', {'preferences': preferences, 'student_status': student_status})
     
+    # --------- Preference Form ---------
     available_courses = OpenFor.objects.filter(program=student.program, batch=student.batch)
     course_dict = {}
     for i in range(1, 10):
@@ -62,8 +82,6 @@ def PreferenceProcess(request):
             slot_cnt = i
 
     if request.method == 'POST':
-        # print(request.POST)
-        # Handle for invalid entries (for eg. if a student has 3 slots but only 2 are filled, then any of the 3 slots should not be processed)
         
         for i in range(1, slot_cnt+1):
             # print(i)
@@ -85,7 +103,7 @@ def PreferenceProcess(request):
                     print("Error saving preference for student" + student.name + " for course " + course_obj.course.course_name + " in slot " + str(i) + " with preference " + str(j))
         return redirect('Home')
         
-    return render(request, 'preference_process.html', {"courses_dict": course_dict})
+    return render(request, 'preference_process.html', {"courses_dict": course_dict, 'student_status': student_status})
 
 def AdminControls(request):
     return render(request, 'admin_panel.html') # create this file

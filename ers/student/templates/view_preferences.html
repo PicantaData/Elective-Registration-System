@@ -1,0 +1,36 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block content %}
+<br><br>
+<br><br>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Current Preferences</h1>
+            <hr>
+        </div>
+    </div>
+<div class="container-lg align-items-center">
+    {% if preferences %}
+        <div class="accordion" id="accordionExample">
+            {% for preference in preferences %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ preference.slot }}" aria-expanded="true" aria-controls="collapse{{ preference.slot }}">
+                            Slot {{ preference.slot }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ preference.slot }}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <p class="h5">Preference {{ preference.preference_index }}: {{ preference.course_preference.course.course_name }} ({{ preference.course_preference.course.course_id }})</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="h4">No preferences found for your account.</p>
+    {% endif %}
+</div>
+{% endblock %}
