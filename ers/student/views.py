@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import StudentUser,StudentForm, OpenFor, Preferences, Allotment
+from .models import StudentUser,StudentForm, OpenFor, Preferences, Course, OpenFor, FormatForm, Allotment
 from django.contrib import messages
 from tablib import Dataset
 import pandas as pd
