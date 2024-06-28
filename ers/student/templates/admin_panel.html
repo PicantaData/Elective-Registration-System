@@ -33,10 +33,38 @@
                     <input type="file" name="file" id="file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" style="margin-top: 20px;">
                 <button type="submit" class="btn btn-primary">Upload</button>
             </div>
         </form>
+    </div>
+
+    <div class="col-md-4" style="margin-top: 20px;">
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#clearDataModal">
+            Clear All Student Data
+        </button>
+    </div>
+    
+    <!-- Modal for confirmation -->
+    <div class="modal fade" id="clearDataModal" tabindex="-1" aria-labelledby="clearDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clearDataModalLabel">Confirm Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to clear all student data? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form action="{% url 'uStudentData' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="clear_data" class="btn btn-danger">Clear All Data</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <hr>
@@ -50,10 +78,37 @@
                     <input type="file" name="file" id="file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" style="margin-top: 20px;">
                 <button type="submit" class="btn btn-primary">Upload</button>
             </div>
         </form>
+    </div>
+
+    <!-- Modal for clear confirmation -->
+    <div class="modal fade" id="clearCoursesDataModal" tabindex="-1" aria-labelledby="clearCoursesDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clearCoursesDataModalLabel">Confirm Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to clear all courses data? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form action="{% url 'uCourses' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="clear_data" class="btn btn-danger">Clear All Data</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4" style="margin-top: 20px;">
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#clearCoursesDataModal">
+            Clear All Courses Data
+        </button>
     </div>
 
     <hr>
@@ -67,10 +122,115 @@
                     <input type="file" name="file" id="file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4" style="margin-top: 20px;">
                 <button type="submit" class="btn btn-primary">Upload</button>
             </div>
         </form>
+    </div>
+
+
+    <!-- Modal for clear confirmation -->
+    <div class="modal fade" id="clearOpenForDataModal" tabindex="-1" aria-labelledby="clearOpenForDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clearOpenForDataModalLabel">Confirm Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to clear all open-for data? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form action="{% url 'uOpen-for' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="clear_data" class="btn btn-danger">Clear All Data</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4" style="margin-top: 20px;">
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#clearOpenForDataModal">
+            Clear All Open-for Data
+        </button>
+    </div>
+
+    <!--Allocation-->
+    <hr>
+    <div class="row">
+        <form action="{% url 'uAllocation' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="file">Upload Allocation List</label>
+                    <input type="file" name="file" id="file" class="form-control" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                </div>
+            </div>
+            <div class="col-md-4" style="margin-top: 20px;">
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Modal for confirmation -->
+    <div class="modal fade" id="clearAllotmentDataModal" tabindex="-1" aria-labelledby="clearAllotmentDataModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="clearAllotmentDataModalLabel">Confirm Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to clear all Allotment data? This action cannot be undone.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form action="{% url 'uAllocation' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="clear_data" class="btn btn-danger">Clear All Data</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4" style="margin-top: 20px;">
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#clearAllotmentDataModal">
+            Clear All Allocation Data
+        </button>
+    </div>
+
+    <hr>
+    <!--trigger modal (Export Preferences)-->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#download-modal">
+        Export Preferences
+    </button>
+    <!--modal-->
+    <div class="modal fade" id="download-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Download Preferences</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'dpreferences' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="format">Select Format:</label>
+                            <select name="format" class="form-control" id="format">
+                                <option value="xls">XLS</option>
+                                <option value="csv">CSV</option>
+                                <option value="xlsx">XLSX</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Download</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

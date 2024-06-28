@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from student import views
+from student.views import PreferenceDownload
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,4 +31,7 @@ urlpatterns = [
     path('admin-panel/upload/studentData/',views.UploadStudentData, name='uStudentData'),
     path('admin-panel/upload/courseData/',views.UploadCourses, name='uCourses'),
     path('admin-panel/upload/openforData/',views.UploadOpenFor, name='uOpen-for'),
+    path('admin-panel/upload/allocationData/',views.UploadAllocation, name='uAllocation'),
+    path('admin-panel/download/preferences/',PreferenceDownload, name="dpreferences")
+    
 ]

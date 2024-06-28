@@ -87,6 +87,13 @@ class Preferences(models.Model):
     def __str__(self):
         return str(self.student.student_id) + " : Slot" + str(self.slot) + " Pref" + str(self.preference_index)
     
+class FormatForm(forms.Form):
+    format = forms.ChoiceField(choices=[
+        ('xls', 'XLS'),
+        ('csv', 'CSV'),
+        ('xlsx', 'XLSX')
+    ])
+    
 class Allotment(models.Model):
     student = models.ForeignKey(StudentUser, on_delete=models.CASCADE)
     slot = models.IntegerField()
