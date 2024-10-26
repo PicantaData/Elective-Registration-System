@@ -136,7 +136,7 @@
                         <div class="form-group">
                             {% for preference, _ in courses_dict.items %}
                                 <label for="slot{{ preference }}">Preference {{ preference }}</label>
-                                <select class="form-control" id="slot{{ preference }}" name="slotPreferences{{ preference }}" onchange="checkDuplicate(this);" required>
+                                <select class="form-control" id="slot{{ preference }}" name="slotPreferences{{ preference }}" onchange="checkDuplicate(this);">
                                     <option selected disabled value="">Choose Option</option>
                                     {% for slot, useless in courses_dict.items %}
                                         <option value="S{{ slot }}">Slot {{ slot }}</option>

@@ -378,69 +378,69 @@ def UploadAllocation(request):
 
     return render(request, 'admin_panel.html')
 
-def UploadInstituteRequirements(request):
-    if request.method == 'POST':
-        # Check if file was uploaded
-        if 'clear_data' in request.POST:
-            # Clear all data in StudentUser model
-            if InstituteRequirements.objects.exists():
-                InstituteRequirements.objects.all().delete()
-                messages.success(request, 'All Institute Requirements data has been cleared successfully')
-            else:
-                messages.info(request, 'No data to clear')
-            return redirect('AdminControls')
+# def UploadInstituteRequirements(request):
+#     if request.method == 'POST':
+#         # Check if file was uploaded
+#         if 'clear_data' in request.POST:
+#             # Clear all data in StudentUser model
+#             if InstituteRequirements.objects.exists():
+#                 InstituteRequirements.objects.all().delete()
+#                 messages.success(request, 'All Institute Requirements data has been cleared successfully')
+#             else:
+#                 messages.info(request, 'No data to clear')
+#             return redirect('AdminControls')
         
-        if 'file' not in request.FILES:
-            messages.error(request, 'No file was uploaded')
-            return redirect('AdminControls')
+#         if 'file' not in request.FILES:
+#             messages.error(request, 'No file was uploaded')
+#             return redirect('AdminControls')
         
-        file = request.FILES['file']
+#         file = request.FILES['file']
 
-        # Check if the file format is valid
-        if not file.name.endswith(('.csv', '.xlsx', '.xls')):
-            messages.error(request, 'This is not a valid file format. Only .csv, .xlsx, and .xls are allowed.')
-            return redirect('AdminControls')
+#         # Check if the file format is valid
+#         if not file.name.endswith(('.csv', '.xlsx', '.xls')):
+#             messages.error(request, 'This is not a valid file format. Only .csv, .xlsx, and .xls are allowed.')
+#             return redirect('AdminControls')
         
-        dataset = Dataset()
-        try:
-            if file.name.endswith('.csv'):
-                imported_data = dataset.load(file.read().decode('utf-8'), format='csv')
-            elif file.name.endswith('.xlsx'):
-                imported_data = dataset.load(file.read(), format='xlsx')
-            elif file.name.endswith('.xls'):
-                imported_data = dataset.load(file.read(), format='xls')
-            else:
-                messages.error(request, 'Unsupported file format')
-                return redirect('AdminControls')
+#         dataset = Dataset()
+#         try:
+#             if file.name.endswith('.csv'):
+#                 imported_data = dataset.load(file.read().decode('utf-8'), format='csv')
+#             elif file.name.endswith('.xlsx'):
+#                 imported_data = dataset.load(file.read(), format='xlsx')
+#             elif file.name.endswith('.xls'):
+#                 imported_data = dataset.load(file.read(), format='xls')
+#             else:
+#                 messages.error(request, 'Unsupported file format')
+#                 return redirect('AdminControls')
 
-            for data in imported_data:
-                program = data[1]
-                batch = data[2]
-                category = data[3]
-                count = data[4]
+#             for data in imported_data:
+#                 program = data[1]
+#                 batch = data[2]
+#                 category = data[3]
+#                 count = data[4]
                 
-            #Check for duplicate entries
-                if InstituteRequirements.objects.filter(program=program, batch=batch, category=category,count=count).exists():
-                    print(f"Data already exists. Skipping...")
-                    continue
+#             #Check for duplicate entries
+#                 if InstituteRequirements.objects.filter(program=program, batch=batch, category=category,count=count).exists():
+#                     print(f"Data already exists. Skipping...")
+#                     continue
                 
-                instituteRequirements_object = InstituteRequirements.objects.create(
-                    program=program,
-                    batch=batch,
-                    category=category,
-                    count=count,
-                )
+#                 instituteRequirements_object = InstituteRequirements.objects.create(
+#                     program=program,
+#                     batch=batch,
+#                     category=category,
+#                     count=count,
+#                 )
                     
-                instituteRequirements_object.save()
+#                 instituteRequirements_object.save()
 
-            messages.success(request, 'File uploaded and data saved successfully')
-        except Exception as e:
-            messages.error(request, f'Error processing file: {e}')
-            return redirect('AdminControls')
+#             messages.success(request, 'File uploaded and data saved successfully')
+#         except Exception as e:
+#             messages.error(request, f'Error processing file: {e}')
+#             return redirect('AdminControls')
 
-        return redirect('AdminControls')
+#         return redirect('AdminControls')
 
-    return render(request, 'admin_panel.html')
+#     return render(request, 'admin_panel.html')
 
  #export views
  
