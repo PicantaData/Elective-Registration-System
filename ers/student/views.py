@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import StudentUser,StudentForm, OpenFor, Preferences, Course, OpenFor, FormatForm, Allotment
+from .models import StudentUser,StudentForm, OpenFor, Preferences, Course, OpenFor, FormatForm, Allotment, SlotPreference, StudentRequirements
 from django.contrib import messages
 from tablib import Dataset
 import pandas as pd
@@ -7,6 +7,7 @@ from django.views.generic.edit import FormView
 from .admin import PreferenceResources
 from django.http import HttpResponse
 import logging
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +71,12 @@ def PreferenceProcess(request):
     # If edit preference feature is to be added, then move this to a separate function, and on edit, call this function so the form can be filled again and delete all previous preferences before storing new ones.
     preferences = Preferences.objects.filter(student=student).order_by('slot', 'preference_index')
     if preferences:
-        return render(request, 'view_preferences.html', {'preferences': preferences, 'student_status': student_status})
+        # Fetch details to display on the page
+        current_semester = student.semester
+        student_requirements = StudentRequirements.objects.filter(student=student).order_by('category')
+        slot_preferences = SlotPreference.objects.filter(student=student).order_by('preference_index')
+        
+        return render(request, 'view_preferences.html', {'preferences': preferences, 'student_status': student_status, 'selected_semester': current_semester, 'academic_requirements': student_requirements.values(), 'slot_priorities': slot_preferences})
     
     # --------- Preference Form ---------
     available_courses = OpenFor.objects.filter(program=student.program, batch=student.batch)
@@ -82,9 +88,34 @@ def PreferenceProcess(request):
             slot_cnt = i
 
     if request.method == 'POST':
-        
+        # print(request.POST)
+        # Save student's current semester and elective requirements
+        student_current_semester = int(request.POST.get('semester'))
+        student.semester = student_current_semester
+        student.save()
+        # Change this as per html form. Add new types in both places if required.
+        elective_categories = ['ictElectives', 'teElectives', 'oeElectives', 'seElectives']
+        for category in elective_categories:
+            num_courses = int(request.POST.get(category))
+            try:
+                StudentRequirements.objects.create(student=student, category=category, count=num_courses).save()
+            except Exception as e:
+                print(e)
+                print("Error saving student requirements for student" + student.name + " in semester " + str(student_current_semester) + " for category " + category + " with count " + str(num_courses))
+
         for i in range(1, slot_cnt+1):
             # print(i)
+            # Storing slot preferences
+            student_slot_pref = request.POST.get('slotPreferences'+str(i))
+            student_slot_pref = re.findall(r'\d+', student_slot_pref)
+            try:
+                # Handle case when object already exists
+                SlotPreference.objects.create(student=student, slot_preference=int(student_slot_pref[0]), preference_index=i).save()
+            except Exception as e:
+                print(e)
+                print("Error saving slot preference for student" + student.name + " in slot " + str(i) + " with preference " + str(student_slot_pref))
+            
+            # Storing course preferences
             if i not in course_dict:
                 continue
             for j in course_dict[i][1]:
@@ -95,7 +126,6 @@ def PreferenceProcess(request):
 
                 course_obj = OpenFor.objects.get(id=pref_j)
                 try:
-                    pass
                     preference_object = Preferences.objects.create(student=student,    course_preference=course_obj, slot=i, preference_index=j)
                     preference_object.save()
                 except Exception as e:
@@ -347,7 +377,71 @@ def UploadAllocation(request):
         return redirect('AdminControls')
 
     return render(request, 'admin_panel.html')
- 
+
+def UploadInstituteRequirements(request):
+    if request.method == 'POST':
+        # Check if file was uploaded
+        if 'clear_data' in request.POST:
+            # Clear all data in StudentUser model
+            if InstituteRequirements.objects.exists():
+                InstituteRequirements.objects.all().delete()
+                messages.success(request, 'All Institute Requirements data has been cleared successfully')
+            else:
+                messages.info(request, 'No data to clear')
+            return redirect('AdminControls')
+        
+        if 'file' not in request.FILES:
+            messages.error(request, 'No file was uploaded')
+            return redirect('AdminControls')
+        
+        file = request.FILES['file']
+
+        # Check if the file format is valid
+        if not file.name.endswith(('.csv', '.xlsx', '.xls')):
+            messages.error(request, 'This is not a valid file format. Only .csv, .xlsx, and .xls are allowed.')
+            return redirect('AdminControls')
+        
+        dataset = Dataset()
+        try:
+            if file.name.endswith('.csv'):
+                imported_data = dataset.load(file.read().decode('utf-8'), format='csv')
+            elif file.name.endswith('.xlsx'):
+                imported_data = dataset.load(file.read(), format='xlsx')
+            elif file.name.endswith('.xls'):
+                imported_data = dataset.load(file.read(), format='xls')
+            else:
+                messages.error(request, 'Unsupported file format')
+                return redirect('AdminControls')
+
+            for data in imported_data:
+                program = data[1]
+                batch = data[2]
+                category = data[3]
+                count = data[4]
+                
+            #Check for duplicate entries
+                if InstituteRequirements.objects.filter(program=program, batch=batch, category=category,count=count).exists():
+                    print(f"Data already exists. Skipping...")
+                    continue
+                
+                instituteRequirements_object = InstituteRequirements.objects.create(
+                    program=program,
+                    batch=batch,
+                    category=category,
+                    count=count,
+                )
+                    
+                instituteRequirements_object.save()
+
+            messages.success(request, 'File uploaded and data saved successfully')
+        except Exception as e:
+            messages.error(request, f'Error processing file: {e}')
+            return redirect('AdminControls')
+
+        return redirect('AdminControls')
+
+    return render(request, 'admin_panel.html')
+
  #export views
  
 def PreferenceDownload(request):

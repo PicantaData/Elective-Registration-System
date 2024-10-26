@@ -7,6 +7,80 @@
 <div class="container-lg align-items-center">
     <form method="POST" action="{% url 'PreferenceProcess' %}" onsubmit="return validateForm()">
         {% csrf_token %}
+
+        <!-----------Semester----------------------->
+        <h3>Select Semester</h3>
+        <div class="form-group row">
+            <!-- <label for="semester" class="col-sm-2 col-form-label"></label> -->
+            <div class="col-sm-3">
+                <select class="form-control" id="semester" name="semester">
+                    <option selected disabled value="">Choose Option</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                </select>
+            </div>
+        </div>
+        <!-- <br> -->
+        <!-------Academice Requirement-------------->
+        <hr>
+
+        <h3>Academic Requirements</h3>
+        <p>Select the number of electives you would like to take this semester</p>
+        <div class="mb-4">
+            <div class="form-group row">
+                <label for="ictElectives" class="col-sm-2 col-form-label">ICT Electives:</label>
+                <div class="col-sm-1">
+                    <select class="form-control" id="ictElectives" name="ictElectives" >
+                        <option value="0" selected>0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="form-group row">
+                <label for="teElectives" class="col-sm-2 col-form-label">TE Electives:</label>
+                <div class="col-sm-1">
+                    <select class="form-control" id="teElectives" name="teElectives" >
+                        <option value="0" selected>0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="form-group row">
+                <label for="oeElectives" class="col-sm-2 col-form-label">OE Electives:</label>
+                <div class="col-sm-1">
+                    <select class="form-control" id="oeElectives" name="oeElectives" >
+                        <option value="0" selected>0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="form-group row">
+                <label for="seElectives" class="col-sm-2 col-form-label">SE Electives:</label>
+                <div class="col-sm-1">
+                    <select class="form-control" id="seElectives" name="seElectives">
+                        <option value="0" selected>0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <!-------Course Preference section---------->
+        <h3>Course Preferences</h3>
         <div class="accordion" id="accordionExample">
             {% for slot, courses in courses_dict.items %}
                 <div class="accordion-item">
@@ -44,6 +118,40 @@
                 </div>
             {% endfor %}
         </div>
+        <!--------------------Slot Preference section----------->
+        <hr>
+        
+        <h3>Slot Priority</h3>
+        <!-- <p>Select the priority of each slot</p> -->
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSlotPreferences" aria-expanded="true" aria-controls="collapseSlotPreferences">
+                        Slot Preferences
+                    </button>
+                </h2>
+                <div id="collapseSlotPreferences" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <p>Select your preferred slots </p>
+                        <div class="form-group">
+                            {% for preference, _ in courses_dict.items %}
+                                <label for="slot{{ preference }}">Preference {{ preference }}</label>
+                                <select class="form-control" id="slot{{ preference }}" name="slotPreferences{{ preference }}" onchange="checkDuplicate(this);" required>
+                                    <option selected disabled value="">Choose Option</option>
+                                    {% for slot, useless in courses_dict.items %}
+                                        <option value="S{{ slot }}">Slot {{ slot }}</option>
+                                    {% endfor %}
+                                </select>
+                                <br>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <!--------------------Button Section -------------------------->
         <br>
         <hr class="mt-0 mb-3">
         <div class="d-none d-md-block text-end">
@@ -56,62 +164,175 @@
         </div>
     </form>
 </div>
-
+<br>
 <script>
-    function checkDuplicate(selectElement) {
-        const selectedValue = selectElement.value;
-        const allSelectElements = document.querySelectorAll('select');
-        for (let i = 0; i < allSelectElements.length; i++) {
-            if (allSelectElements[i] !== selectElement && allSelectElements[i].value === selectedValue && selectedValue !== "") {
-                alert('Same course cannot be chosen in two options');
+function checkDuplicate(selectElement) {
+    const selectedValue = selectElement.value;
+    if (!selectedValue) return; // Skip if no value selected
+    
+    // If this is a slot preference dropdown (for slot priority)
+    if (selectElement.id.match(/^slot\d$/)) {
+        const allSlotPreferences = document.querySelectorAll('select[name^="slotPreferences"]');
+        for (let element of allSlotPreferences) {
+            if (element !== selectElement && element.value === selectedValue) {
+                alert('Each slot can only be selected once in slot preferences');
                 selectElement.value = '';
-                break;
+                return;
+            }
+        }
+
+        // Check if previous preferences are filled
+        const currentPrefNumber = parseInt(selectElement.id.replace('slot', ''));
+        if (currentPrefNumber > 1) {
+            const previousSelect = document.getElementById(`slot${currentPrefNumber - 1}`);
+            if (!previousSelect.value) {
+                alert('Please fill slot preferences in order');
+                selectElement.value = '';
+                return;
+            }
+        }
+        return;
+    }
+    
+    // For course preferences
+    const allSelectElements = document.querySelectorAll('select[name^="slot"][name*="preference"]');
+    for (let element of allSelectElements) {
+        if (element !== selectElement && element.value === selectedValue) {
+            alert('Same course cannot be chosen in two options');
+            selectElement.value = '';
+            return;
+        }
+    }
+}
+
+function validateslotNoneSelection() {
+    const slotPreferences = Array.from(document.querySelectorAll('select[name^="slotPreferences"]'));
+    
+    for (let i = 0; i < slotPreferences.length; i++) {
+        const currentSelect = slotPreferences[i];
+        
+        // If current preference is empty, disable all subsequent preferences
+        if (!currentSelect.value) {
+            for (let j = i + 1; j < slotPreferences.length; j++) {
+                slotPreferences[j].value = '';
+                slotPreferences[j].disabled = true;
+            }
+            break;
+        } else {
+            // Enable the next preference if it exists
+            if (i + 1 < slotPreferences.length) {
+                slotPreferences[i + 1].disabled = false;
+            }
+        }
+    }
+}
+
+function validateNoneSelection(slotNumber) {
+    const firstCoursePreference = document.querySelector(`select[name="slot${slotNumber}preference1"]`);
+    const allCoursePreferences = document.querySelectorAll(`select[name^="slot${slotNumber}preference"]`);
+
+    if (!firstCoursePreference) return;
+
+    if (firstCoursePreference.value === "") {
+        Array.from(allCoursePreferences)
+            .slice(1)
+            .forEach(select => {
+                select.value = "";
+                select.disabled = true;
+            });
+    } else {
+        allCoursePreferences.forEach(select => {
+            select.disabled = false;
+        });
+    }
+}
+
+function validateForm() {
+    // Validate semester selection
+    const semester = document.getElementById('semester');
+    if (!semester.value) {
+        alert('Please select a semester');
+        semester.focus();
+        return false;
+    }
+
+    // Validate elective counts
+    const electives = ['ictElectives', 'teElectives', 'oeElectives', 'seElectives'];
+    let totalElectives = 0;
+    for (let elective of electives) {
+        totalElectives += parseInt(document.getElementById(elective).value);
+    }
+    if (totalElectives === 0) {
+        alert('Please select at least one elective');
+        return false;
+    }
+
+    // Validate course preferences
+    const slots = document.querySelectorAll('.accordion-item');
+    for (let slot of slots) {
+        const preferences = slot.querySelectorAll('select[name^="slot"][name*="preference"]');
+        const firstPreference = preferences[0];
+        
+        if (!firstPreference) continue;
+
+        if (firstPreference.value) {
+            // If first preference is selected, all subsequent preferences must be selected
+            for (let i = 1; i < preferences.length; i++) {
+                if (!preferences[i].value) {
+                    alert('When first preference is selected, all subsequent preferences must also be selected');
+                    preferences[i].focus();
+                    return false;
+                }
             }
         }
     }
 
-    function validateNoneSelection(slot) {
-        const firstPreference = document.querySelector(`select[name="slot${slot}preference1"]`);
-        const allPreferences = document.querySelectorAll(`select[name^="slot${slot}preference"]`);
+    // Validate slot preferences
+    const slotPreferences = document.querySelectorAll('select[name^="slotPreferences"]');
+    let hasSelectedPreference = false;
+    const selectedSlots = new Set();
 
-        if (firstPreference.value === "") {
-            allPreferences.forEach(select => {
-                if (select !== firstPreference) {
-                    select.value = ""; // Reset the value
-                    select.disabled = true; // Disable other preferences
-                }
-            });
-        } else {
-            allPreferences.forEach(select => {
-                if (select.disabled) {
-                    select.disabled = false; // Enable other preferences
-                }
-            });
-        }
-    }
-
-    function validateForm() {
-        const slots = document.querySelectorAll('.accordion-item');
-        for (let i = 0; i < slots.length; i++) {
-            const firstPreference = slots[i].querySelector('select[name^="slot"][name$="preference1"]');
-            if (!firstPreference) {
-                alert('The first preference for each slot must be selected.');
-                firstPreference.focus();
+    for (let i = 0; i < slotPreferences.length; i++) {
+        const pref = slotPreferences[i];
+        
+        if (pref.value) {
+            hasSelectedPreference = true;
+            if (selectedSlots.has(pref.value)) {
+                alert('Each slot can only be selected once in slot preferences');
+                pref.focus();
                 return false;
             }
-
-            if (firstPreference.value !== "") {
-                const allPreferences = slots[i].querySelectorAll('select[name^="slot"]');
-                for (let j = 1; j < allPreferences.length; j++) {
-                    if (allPreferences[j].value === "") {
-                        alert('All preferences must be selected if the first preference is not "Choose Option".');
-                        allPreferences[j].focus();
-                        return false;
-                    }
-                }
-            }
+            selectedSlots.add(pref.value);
+        } else if (hasSelectedPreference) {
+            alert('Please fill all slot preferences in order');
+            pref.focus();
+            return false;
         }
-        return true;
     }
+
+    return true;
+}
+
+// Initialize form state on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Set initial state for all slots
+    const slots = document.querySelectorAll('.accordion-item');
+    slots.forEach(slot => {
+        const slotNumber = slot.querySelector('.accordion-button').textContent.trim().split(' ')[1];
+        validateNoneSelection(slotNumber);
+    });
+
+    // Set initial state for slot preferences
+    validateslotNoneSelection();
+
+    // Add event listeners for slot preference dropdowns
+    const slotPreferences = document.querySelectorAll('select[name^="slotPreferences"]');
+    slotPreferences.forEach(select => {
+        select.addEventListener('change', function() {
+            checkDuplicate(this);
+            validateslotNoneSelection();
+        });
+    });
+});
 </script>
 {% endblock %}

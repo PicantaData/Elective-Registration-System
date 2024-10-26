@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import StudentUser, Course, OpenFor, Preferences, Allotment
+from .models import StudentUser, Course, OpenFor, Preferences, Allotment, SlotPreference, StudentRequirements
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
@@ -15,3 +15,5 @@ admin.site.register(Course)
 admin.site.register(OpenFor)
 admin.site.register(Preferences)
 admin.site.register(Allotment)
+admin.site.register(SlotPreference)
+admin.site.register(StudentRequirements)

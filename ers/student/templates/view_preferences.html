@@ -11,26 +11,69 @@
             <hr>
         </div>
     </div>
-<div class="container-lg align-items-center">
-    {% if preferences %}
-        <div class="accordion" id="accordionExample">
-            {% for preference in preferences %}
+    <div class="container-lg align-items-center">
+        {% if preferences %}
+            <!----------- Semester -------------------->
+            <h3>Selected Semester</h3>
+            <div class="form-group row">
+                <div class="col-sm-3">
+                    <p class="h5">{{ selected_semester }}</p>
+                </div>
+            </div>
+            <hr>
+
+            <!----------- Academic Requirements -------------------->
+            <h3>Academic Requirements</h3>
+            <div class="mb-4">
+                <!-- Make this more modular -->
+                <p class="h5">ICT Electives: {{ academic_requirements.0.count }}</p>
+                <p class="h5">OE Electives: {{ academic_requirements.1.count }}</p>
+                <p class="h5">SE Electives: {{ academic_requirements.2.count }}</p>
+                <p class="h5">TE Electives: {{ academic_requirements.3.count }}</p>
+            </div>
+            <hr>
+
+            <!----------- Course Preferences -------------------->
+            <h3>Course Preferences</h3>
+            <div class="accordion" id="accordionExample">
+                {% for preference in preferences %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ preference.slot }}" aria-expanded="true" aria-controls="collapse{{ preference.slot }}">
+                                Slot {{ preference.slot }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ preference.slot }}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <p class="h5">Preference {{ preference.preference_index }}: {{ preference.course_preference.course.course_name }} ({{ preference.course_preference.course.course_id }})</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <hr>
+
+            <!----------- Slot Priorities -------------------->
+            <h3>Slot Priorities</h3>
+            <div class="accordion" id="slotPriorityAccordion">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ preference.slot }}" aria-expanded="true" aria-controls="collapse{{ preference.slot }}">
-                            Slot {{ preference.slot }}
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSlotPriorities" aria-expanded="true" aria-controls="collapseSlotPriorities">
+                            Slot Preferences
                         </button>
                     </h2>
-                    <div id="collapse{{ preference.slot }}" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                    <div id="collapseSlotPriorities" class="accordion-collapse collapse show" data-bs-parent="#slotPriorityAccordion">
                         <div class="accordion-body">
-                            <p class="h5">Preference {{ preference.preference_index }}: {{ preference.course_preference.course.course_name }} ({{ preference.course_preference.course.course_id }})</p>
+                            {% for priority in slot_priorities %}
+                                <p class="h5">Preference {{ priority.slot_preference }}: Slot {{ priority.preference_index }}</p>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p class="h4">No preferences found for your account.</p>
-    {% endif %}
-</div>
+            </div>
+            <br>
+        {% else %}
+            <p class="h4">No preferences found for your account.</p>
+        {% endif %}
+    </div>
 {% endblock %}
