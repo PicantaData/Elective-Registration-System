@@ -4,7 +4,7 @@ from django.contrib import messages
 from tablib import Dataset
 import pandas as pd
 from django.views.generic.edit import FormView
-from .admin import PreferenceResources
+from .admin import PreferenceResources, RequirementsResource, SlotPreferenceResources
 from django.http import HttpResponse
 import logging
 import re
@@ -463,9 +463,6 @@ def PreferenceDownload(request):
             if file_format == 'csv':
                 response = HttpResponse(dataset.csv, content_type='text/csv')
                 response['Content-Disposition'] = 'attachment; filename="preferences.csv"'
-            elif file_format == 'xls':
-                response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
-                response['Content-Disposition'] = 'attachment; filename="preferences.xls"'
             elif file_format == 'xlsx':
                 response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
                 response['Content-Disposition'] = 'attachment; filename="preferences.xlsx"'
@@ -477,6 +474,65 @@ def PreferenceDownload(request):
         form = FormatForm()
 
     return render(request, 'admin_panel.html', {'form': form})
-    
-    
+
+
+def SlotPreferenceDownload(request):
+    if request.method == 'POST':
+        form = FormatForm(request.POST)
+        if form.is_valid():
+            file_format = form.cleaned_data['format']
+            slot_preferences = SlotPreference.objects.all().order_by('student', 'slot_preference', 'preference_index')
+
+            # Check if preferences exist
+            if not slot_preferences.exists():
+                messages.warning(request, 'No data available to download.')
+                return render(request, 'admin_panel.html')
+
+            slot_pref_resource = SlotPreferenceResources()
+            dataset = slot_pref_resource.export(slot_preferences)
             
+            dataset.headers = ('StudentID', 'Slot', 'Preference No.')
+            if file_format == 'csv':
+                response = HttpResponse(dataset.csv, content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename="slot_preferences.csv"'
+            elif file_format == 'xlsx':
+                response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response['Content-Disposition'] = 'attachment; filename="slot_preferences.xlsx"'
+            else:
+                response = HttpResponse(status=400)
+            
+            return response
+    else:
+        form = FormatForm()
+
+    return render(request, 'admin_panel.html', {'form': form})
+    
+    
+def RequirementsDownload(request):
+    if request.method == 'POST':
+        form = FormatForm(request.POST)
+        if form.is_valid():
+            file_format = form.cleaned_data['format']
+            requirements = StudentRequirements.objects.all().order_by('student', 'category', 'count')
+
+            # Check if preferences exist
+            if not requirements.exists():
+                messages.warning(request, 'No data available to download.')
+                return render(request, 'admin_panel.html')
+
+            requirements_resource = RequirementsResource()
+            dataset = requirements_resource.export(requirements)
+            
+            dataset.headers = ('StudentID', 'Program', 'Semester', 'Category', 'Count')
+            if file_format == 'csv':
+                response = HttpResponse(dataset.csv, content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename="requirements.csv"'
+            elif file_format == 'xlsx':
+                response = HttpResponse(dataset.xlsx, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response['Content-Disposition'] = 'attachment; filename="requirements.xlsx"'
+            else:
+                response = HttpResponse(status=400)
+            
+            return response
+    else:
+        form = FormatForm()

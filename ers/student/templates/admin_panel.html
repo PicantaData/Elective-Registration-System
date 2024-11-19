@@ -125,18 +125,7 @@
     </div>
   </div>
 
-  <!-- Export Preferences -->
-  <div class="row mb-4">
-    <div class="col-md-6 offset-md-3">
-      <p class="text-muted mb-2">
-        To export the student preferences, please click here:
-      </p>
-      <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#download-modal">
-        Export Preferences
-      </button>
-    </div>
-  </div>
-
+  
   <!-- Modal for Clear Data Confirmation -->
   <div class="modal fade" id="clearDataModal" tabindex="-1" aria-labelledby="clearDataModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -158,7 +147,7 @@
       </div>
     </div>
   </div>
-
+  
   <!-- Modal for Clear Courses Data Confirmation -->
   <div class="modal fade" id="clearCoursesDataModal" tabindex="-1" aria-labelledby="clearCoursesDataModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -180,7 +169,7 @@
       </div>
     </div>
   </div>
-
+  
   <!-- Modal for Clear Open-for Data Confirmation -->
   <div class="modal fade" id="clearOpenForDataModal" tabindex="-1" aria-labelledby="clearOpenForDataModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -202,7 +191,7 @@
       </div>
     </div>
   </div>
-
+  
   <!-- Modal for Clear Allocation Data Confirmation -->
   <div class="modal fade" id="clearAllotmentDataModal" tabindex="-1" aria-labelledby="clearAllotmentDataModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -224,31 +213,108 @@
       </div>
     </div>
   </div>
-
-  <!-- Modal for Export Preferences -->
-  <div class="modal fade" id="download-modal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Download Preferences</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  
+  <div class="row mb-4">
+    <div class="col-md-6 offset-md-3">
+      <div class="d-flex justify-content-between">
+        <!-- Export Preferences Button -->
+        <div class="text-center flex-fill mx-1">
+          <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#download-modal">
+            Export Preferences
+          </button>
         </div>
-        <div class="modal-body">
-          <form action="{% url 'dpreferences' %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group mb-3">
-              <label for="format" class="form-label">Select Format:</label>
-              <select name="format" class="form-select" id="format">
-                <option value="xls">XLS</option>
-                <option value="csv">CSV</option>
-                <option value="xlsx">XLSX</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Download</button>
-          </form>
+  
+        <!-- Export Slot Preferences Button -->
+        <div class="text-center flex-fill mx-1">
+          <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#download-slotpreferences">
+            Export Slot Preferences
+          </button>
+        </div>
+  
+        <!-- Export Student Requirements Button -->
+        <div class="text-center flex-fill mx-1">
+          <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#download-requirements">
+            Export Student Requirements
+          </button>
         </div>
       </div>
     </div>
   </div>
+
+<!-- Modal for Export Preferences -->
+<div class="modal fade" id="download-modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Download Preferences</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'dpreferences' %}" method="POST">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label for="format" class="form-label">Select Format:</label>
+            <select name="format" class="form-select" id="format">
+              <option value="csv">CSV</option>
+              <option value="xlsx">XLSX</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Download</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Modal for Export Slot Preferences -->
+<div class="modal fade" id="download-slotpreferences" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Download Slot Preferences</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'drequirements' %}" method="POST">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label for="format" class="form-label">Select Format:</label>
+            <select name="format" class="form-select" id="format">
+              <option value="csv">CSV</option>
+              <option value="xlsx">XLSX</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Download</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Export Student Requirements -->
+<div class="modal fade" id="download-requirements" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Download Student Requirements</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'drequirements' %}" method="POST">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label for="format" class="form-label">Select Format:</label>
+            <select name="format" class="form-select" id="format">
+              <option value="csv">CSV</option>
+              <option value="xlsx">XLSX</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">Download</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {% endblock %}
