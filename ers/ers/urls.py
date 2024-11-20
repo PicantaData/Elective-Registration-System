@@ -34,6 +34,6 @@ urlpatterns = [
     path('admin-panel/upload/allocationData/',views.UploadAllocation, name='uAllocation'),
     path('admin-panel/download/preferences/',PreferenceDownload, name="dpreferences"),
     path('admin-panel/download/requirements/',RequirementsDownload, name="drequirements"),
-    path('admin-panel/download/slot-preferences/',SlotPreferenceDownload, name="drequirements")
+    path('admin-panel/download/slot-preferences/',SlotPreferenceDownload, name="dslotpreferences")
     
 ]

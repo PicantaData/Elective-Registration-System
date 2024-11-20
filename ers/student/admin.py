@@ -6,8 +6,21 @@ from import_export.admin import ImportExportModelAdmin
 class PreferenceResources(resources.ModelResource):
     class Meta:
         model = Preferences
-        fields = ('student', 'slot', 'course_preference_coursecourse_id', 'course_preferencecourse_course_name', 'preference_index')
-        # export_order = ('Student', 'Slot', 'Course ID', 'Course Name', 'Preference No.')
+        fields = (
+            'student__student_id',              # Student ID from the related StudentUser model
+            'slot',                             # Slot field from Preferences
+            'course_preference__course__course_id',     # Course ID from the related OpenFor model
+            'course_preference__course__course_name',   # Course Name from the related OpenFor model
+            'preference_index',                 # Preference index from Preferences
+        )
+        export_order = (
+            'student__student_id', 
+            'slot', 
+            'course_preference__course__course_id', 
+            'course_preference__course__course_name', 
+            'preference_index',
+        )
+
 class RequirementsResource(resources.ModelResource):
     class Meta:
         model = StudentRequirements
